@@ -28,7 +28,7 @@ function root(__path = '.') {
   return path.join(__dirname, __path);
 }
 
-import {polyfills, vendors} from './src/dll';
+import { polyfills, vendors } from './src/dll';
 
 // type definition for WebpackConfig is defined in webpack.d.ts
 function webpackConfig(options: EnvOptions = {}): WebpackConfig {
@@ -48,6 +48,10 @@ function webpackConfig(options: EnvOptions = {}): WebpackConfig {
 
     module: {
       loaders: [
+        {
+          test: require.resolve('snapsvg'),
+          loader: 'imports-loader?this=>window,fix=>module.exports=0'
+        },
         {
           test: /\.ts$/,
           loader: 'awesome-typescript-loader',

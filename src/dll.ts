@@ -34,6 +34,7 @@ export function vendors(env?: any) {
     'mo-js',
     'mojs-player',
     'mojs-curve-editor',
-    'hammerjs'
+    'hammerjs',
+    'snapsvg'
   ];
 }

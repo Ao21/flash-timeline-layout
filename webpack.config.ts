@@ -2,6 +2,7 @@ const {
     ContextReplacementPlugin,
     HotModuleReplacementPlugin,
     DefinePlugin,
+    LoaderOptionsPlugin,
     ProgressPlugin,
     DllReferencePlugin,
 
@@ -31,8 +32,6 @@ function webpackConfig(options: EnvOptions = {}): WebpackConfig {
         HOST: 'localhost',
         HTTPS: false
     };
-
-    console.log('CONSTANTS', JSON.stringify(CONSTANTS, null, 2));
 
     const isProd = options.ENV.indexOf('prod') !== -1;
 
