@@ -351,7 +351,7 @@ declare module 'mo-js' {
          *  {Number}
          *  [0..∞]
          */
-        speed?: number;
+        speed?: number| any;
 
         /**
          *  If the progress should be flipped on repeat animation end
@@ -450,14 +450,14 @@ declare module 'mo-js' {
          *  {String, Object}
          *  [selector, HTMLElement]
          */
-        el: string | HTMLElement | Object;
+        el?: string | HTMLElement | Object;
 
         /**
          *  translateX property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        x: string | number | Object;
+        x?: string | number | Object;
 
         // ∆ :: 
         /**
@@ -465,28 +465,28 @@ declare module 'mo-js' {
          *  {String, Number, Object}
          *  [value, delta]
          */
-        y: string | number | Object;
+        y?: string | number | Object;
 
         /**
          *  translateZ property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        z: string | number | Object;
+        z?: string | number | Object;
 
         /**
          *  skewX property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        skewX: string | number | Object;
+        skewX?: string | number | Object;
 
         /**
          *  skewY property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        skewY: string | number | Object;
+        skewY?: string | number | Object;
 
 
         /**
@@ -494,49 +494,112 @@ declare module 'mo-js' {
          *  {String, Number, Object}
          *  [value, delta]
          */
-        angleX: string | number | {};
+        angleX?: string | number | {};
 
         /**
          *  rotateY property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        angleY: string | number | {};
+        angleY?: string | number | {};
 
         /**
          *  rotateZ property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        angleZ: string | number | {};
+        angleZ?: string | number | {};
 
         /**
          *  scale property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        scale: string | number | {};
+        scale?: string | number | {};
 
         /**
          *  scaleX property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        scaleX: string | number | {};
+        scaleX?: string | number | {};
 
         /**
          *  scaleY property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        scaleY: string | number | {};
+        scaleY?: string | number | {};
 
         /**
          *  opacity property.
          *  {String, Number, Object}
          *  [value, delta]
          */
-        opacity: string | number | {};
+        opacity?: string | number | {};
+
+        /**
+        *  Fires on every update of the tween in any period (including delay periods). You probably want to use `onUpdate` method instead.
+        *  @param p {Number} Normal (not eased) progress.
+        *  @param isForward {Boolean} Direction of the progress.
+        *  @param isYoyo {Boolean} If in `yoyo` period.
+        */
+        onProgress?: (progress: number, isForward?: boolean, isYoyo?: boolean) => any;
+
+        /**
+         *  Fires when tween's the progress reaches `0` point in normal or repeat period.
+         *  @param isForward {Boolean} If progress moves in forward direction.
+         *  @param isYoyo {Boolean} If progress inside `yoyo` flip period.
+         */
+        onStart?: (isForward: boolean, isYoyo: boolean) => any;
+        /**
+         *  Fires when tween's the progress reaches `0` point in normal or repeat period.
+         *  @param isForward {Boolean} If progress moves in forward direction.
+         *  @param isYoyo {Boolean} If progress inside `yoyo` flip period.
+         */
+        onFirstUpdate?: (isForward, isYoyo) => any;
+        /**
+         *  Fires on first update of the tween in sufficiently active period (excluding delay periods).
+         *  @param ep {Number} Eased progress.
+         *  @param p {Number} Normal (not eased) progress
+         *  @param isForward {Boolean} Direction of the progress.
+         *  @param isYoyo {Boolean} If in `yoyo` period.
+         */
+        onUpdate?: (ep, p, isForward, isYoyo) => any;
+
+        /**
+         *  Fires when tween's the progress reaches `1` point in normal or repeat period.
+         *  @param isForward {Boolean} If progress moves in forward direction.
+         *  @param isYoyo {Boolean} If progress inside `yoyo` flip period.
+         */
+        onRepeatComplete?: (isForward, isYoyo) => any;
+
+        /**
+         *  Fires when tween's the entire progress reaches `1` point(doesn't fire in repeat periods).
+         *  @param isForward {Boolean} If progress moves in forward direction.
+         *  @param isYoyo {Boolean} If progress inside `yoyo` flip period.
+         */
+        onComplete?: (isForward, isYoyo) => any;
+
+        /**
+         *  Fires when the `.play` method called and tween isn't in play state yet.
+         */
+        onPlaybackStart?: () => any;
+
+        /**
+         *  Fires when the `.pause` method called and tween isn't in pause state yet.
+         */
+        onPlaybackPause?: () => any;
+
+        /**
+         *  Fires when the `.stop` method called and tween isn't in stop state yet.
+         */
+        onPlaybackStop?: () => any;
+
+        /**
+         *  Fires when the tween end's animation (regardless progress)
+         */
+        onPlaybackComplete?: () => any;
     }
 
     export class Html extends Thenable {
