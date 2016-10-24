@@ -2,6 +2,10 @@ declare module 'mojs-curve-editor' {
 
     class MojsCurveEditor {
         constructor(opts: MojsCurveEditor.Options);
+        constructor();
+
+        getEasing();
+        getEasing(p: any);
     }
 
     namespace MojsCurveEditor {
@@ -9,6 +13,7 @@ declare module 'mojs-curve-editor' {
             name?: string;
             isSaveState?: boolean;
         }
+
     }
 
     export = MojsCurveEditor;

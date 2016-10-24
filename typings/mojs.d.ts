@@ -1073,13 +1073,13 @@ declare module 'mo-js' {
          *  Starts playback.
          *  @param shift {Number} Start progress shift in milliseconds.
          */
-        play(shift: number);
+        play(shift?: number);
 
         /**
          *  Starts playback in backward direction.
          *  @param shift {Number} Start progress shift in milliseconds.
          */
-        playBackward(shift: number);
+        playBackward(shift?: number);
 
         /**
          *  Pause
@@ -1090,19 +1090,19 @@ declare module 'mo-js' {
          *  Restarts playback.
          *  @param shift {Number} Start progress shift in milliseconds.
          *  */
-        replay(shift: number);
+        replay(shift?: number);
 
         /**
          *  Restarts playback in backward direction.
          *  @param shift {Number} Start progress shift in milliseconds.
          *  */
-        replayBackward(shift: number);
+        replayBackward(shift?: number);
 
         /**
          *  Resumes playback in direction it was prior to `pause`.
          *  @param shift {Number} Start progress shift in milliseconds.
          *  */
-        resume(shift: number);
+        resume(shift?: number);
 
         /**
          *  Sets progress of the tween.
