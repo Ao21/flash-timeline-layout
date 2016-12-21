@@ -112,12 +112,12 @@ declare module 'mo-js' {
          *  Tunes start state with new options.
          *  @param options {Object} New start properties.
          */
-        tune(opts: Object): void;
+        tune(opts: Object): this;
 
         /**
          *  Regenerates all randoms in initial properties.
          */
-        generate(): void;
+        generate(): this;
 
     }
 
@@ -1064,6 +1064,8 @@ declare module 'mo-js' {
 
     export class MotionPath {
         constructor(opts: any);
+        run(any: any);
+        run()
     }
 
     export class Tween extends Module {

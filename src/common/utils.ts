@@ -1,5 +1,37 @@
 export class Helpers {
 
+	static getVectorBetweenPoints(point1, point2) {
+		return {
+			x: point1.x - point2.x,
+			y: point1.y - point2.y
+
+		}
+	}
+
+	static addPoints(point1, point2) {
+		return {
+			x: point1.x + point2.x,
+			y: point1.y + point2.y
+
+		}
+	}
+
+	static polyLinetoPath(poly) {
+		var svgNS = poly.ownerSVGElement.namespaceURI;
+		var path = document.createElementNS(svgNS, 'path');
+		var points = poly.getAttribute('points').split(/\s+|,/);
+		var x0 = points.shift(), y0 = points.shift();
+		var pathdata = 'M' + x0 + ',' + y0 + 'L' + points.join(' ');
+		if (poly.tagName == 'polygon') pathdata += 'z';
+		path.setAttribute('id', poly.getAttribute('id'));
+		path.setAttribute('fill', poly.getAttribute('fill'));
+		path.setAttribute('stroke', poly.getAttribute('stroke'));
+		path.setAttribute('d', pathdata);
+
+		return path;
+
+	}
+
 	static polyLineLength(polylineElement) {
 		function dis(p, q) {
 			return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y));
@@ -11,7 +43,7 @@ export class Helpers {
 		return len;
 	}
 
-	
+
 	static polygonLength(el) {
 		console.log(el);
 		var points = el.attr('points');

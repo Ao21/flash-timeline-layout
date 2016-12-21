@@ -1,6 +1,6 @@
 var css = require('./animatedLine.scss');
 
-import { Shape, stagger, easing, Timeline, ShapeSwirl, Tween, TweenOptions, h, Html } from 'mo-js';
+import { Shape, stagger, easing, Timeline, ShapeSwirl, Tween, MotionPath, TweenOptions, h, Html } from 'mo-js';
 import * as MojsPlayer from 'mojs-player';
 
 import MojsCurveEditor from 'mojs-curve-editor';
@@ -30,24 +30,70 @@ export class AnimatedLine {
 	segments = 20;
 	interval = this.height / this.segments;
 
-	currentLineLength = 0;
+	extendedPoint = 3;
 
+	currentLineLength = 0;
 	currentLinePosition = 0;
+	currentBubblePosition = this.extendedPoint;
+
+	defaultBubble: Shape;
+	bubbleCreated: boolean = false;;
 
 	lastSection = 2;
 
 	open = false;
+
+	previousVector: any = { x: 0, y: 0 };
 
 
 	constructor() {
 		this.createStraightLine();
 		this.morphToExtended(() => {
 			this.displayLine(808, 145, () => {
-				this.displayLine(this.currentLinePosition, 0, () => {
-					this.morphBack();
-				});
+				this.createBubble(this.currentBubblePosition, () => {
+					this.moveBubbleDown();
+				})
+				// this.displayLine(145, 0, () => {
+				// 	// this.morphBack();
+				// });
 			});
 		});
+	}
+
+	moveBubbleDown() {
+		if (this.currentBubblePosition === this.extendedPoint) {
+			let oldPoint = animatedLine.points.getItem(this.currentBubblePosition);
+			let newPoint = animatedLine.points.getItem(this.currentBubblePosition + 1);
+			let vector = Helpers.getVectorBetweenPoints(newPoint, oldPoint);
+			vector = Helpers.addPoints(this.previousVector, vector)
+			this.defaultBubble.setProgress(1).then({
+				duration: 350,
+				x: { [this.previousVector.x]: vector.x },
+				y: { [this.previousVector.y]: vector.y },
+				onComplete: () => {
+					this.defaultBubble.pause();
+					this.previousVector = vector;
+					this.currentBubblePosition = this.currentBubblePosition + 1;
+					setTimeout(() => {
+						this.moveBubbleDown();
+					}, 1)
+				}
+			}).play();
+		} else {
+			let oldPoint = animatedLine.points.getItem(this.currentBubblePosition);
+			let newPoint = animatedLine.points.getItem(19);
+			let vector = Helpers.getVectorBetweenPoints(newPoint, oldPoint);
+			vector = Helpers.addPoints(this.previousVector, vector)
+			this.defaultBubble.setProgress(1).then({
+				duration: 800,
+				x: { [this.previousVector.x]: vector.x },
+				y: { [this.previousVector.y]: vector.y },
+				easing: extremeInElasticOutEasing,
+				onComplete: () => {
+					this.defaultBubble.pause();
+				}
+			}).play();
+		}
 	}
 
 
@@ -73,7 +119,7 @@ export class AnimatedLine {
 		if (fromValue > toValue) {
 			position = fromValue - ((fromValue - toValue) * p);
 		} else {
-			position = (toValue - fromValue) * p;
+			position = fromValue + ((toValue - fromValue) * p);
 		}
 		return position;
 	}
@@ -85,7 +131,7 @@ export class AnimatedLine {
 		}
 		const tween = new Tween({
 			duration: duration,
-			delay: 2000,
+			delay: 0,
 			onUpdate: (ep, p, isForward) => {
 				let position = this.animateFromTo(fromValue, toValue, p);
 				animatedLine.setAttribute('stroke-dashoffset', `-${position}px`);
@@ -103,7 +149,7 @@ export class AnimatedLine {
 			duration: 1200,
 			delay: 0,
 			onUpdate: (ep, p, isForward) => {
-				let point = animatedLine.points.getItem(3);
+				let point = animatedLine.points.getItem(this.extendedPoint);
 				point.x = (extremeInElasticOutEasing(p) * 50) + 5;
 				if (p > 0.6 && this.open === false) {
 					this.open = true;
@@ -124,12 +170,12 @@ export class AnimatedLine {
 			duration: 1200,
 			delay: 0,
 			onUpdate: (ep, p, isForward) => {
-				let point = animatedLine.points.getItem(3);
+				let point = animatedLine.points.getItem(this.extendedPoint);
 				point.x = (extremeInElasticOutEasing(1 - p) * 50) + 5;
 
 			},
 			onComplete: () => {
-				let point = animatedLine.points.getItem(3);
+				let point = animatedLine.points.getItem(this.extendedPoint);
 				point.x = 5;
 				if (cb) {
 					cb();
@@ -138,16 +184,22 @@ export class AnimatedLine {
 		}).play();
 	}
 
-	createBubble() {
-		let point = animatedLine.points.getItem(3);
-		const shape = new Shape({
+	createBubble(pointId, cb?) {
+		let point = animatedLine.points.getItem(pointId);
+		this.defaultBubble = new Shape({
 			shape: 'circle',
 			top: point.y,
 			left: point.x,
 			radius: 20,
 			origin: `70 20`,
-			scale: { 0: 1 }
+			scale: { 0: 1 },
+			onComplete: () => {
+				this.defaultBubble.pause();
+				if (cb && !this.bubbleCreated) {
+					this.bubbleCreated = true;
+					cb();
+				}
+			}
 		}).play();
-		console.log(point);
 	}
 }

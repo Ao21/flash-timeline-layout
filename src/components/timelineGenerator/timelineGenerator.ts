@@ -73,7 +73,6 @@ export class TimelineGenerator {
 	animateValidationLine = (el) => {
 		let distance = Math.sqrt((25 * 25) + (50 * 50)) + el.target.offsetTop - 77;
 		Snap.animate(this.currentValidationLineLength, distance, (t) => {
-			console.log(t);
 			this.currentValidationLineLength = t;
 			this.validationPath.attr({ 'stroke-dasharray': '' + t + ' ' + (this.pathLength - t) });
 		}, 300, easing.cubic.in, () => {
